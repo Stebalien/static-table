@@ -4,6 +4,7 @@ require('handsontable/dist/handsontable.full.min.css')
 
 const Handsontable = require('handsontable')
 const Papa = require('papaparse')
+const querystring = require('querystring')
 
 async function fetchCSV (url) {
   const result = await window.fetch(new window.Request(url))
@@ -24,10 +25,25 @@ async function fetchCSV (url) {
 }
 
 async function main () {
-  const data = await fetchCSV(window.location.hash.substr(1))
+  const params = querystring.parse(window.location.hash.substr(1))
+  const src = params['src']
+  const title = params['title'] || 'CSV Viewer'
+
+  window.title = title
+
+  const titleElement = document.createElement('h1')
+  document.body.appendChild(titleElement)
+  titleElement.innerText = title
 
   const tableElement = document.createElement('div')
   document.body.appendChild(tableElement)
+  if (!src) {
+    tableElement.innerText = 'No data source specified.'
+    return
+  }
+  tableElement.innerText = `Loading: ${src}`
+
+  const data = await fetchCSV(src)
 
   Handsontable(tableElement, {
     data: data.data,
@@ -36,6 +52,4 @@ async function main () {
   })
 }
 
-window.addEventListener("DOMContentLoaded", (event) => {
-  main()
-})
+main()
