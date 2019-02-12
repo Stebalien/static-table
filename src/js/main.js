@@ -44,6 +44,7 @@ async function main () {
   tableElement.innerText = `Loading: ${src}`
 
   const data = await fetchCSV(src)
+  tableElement.innerHTML = ''
 
   Handsontable(tableElement, {
     data: data.data,
