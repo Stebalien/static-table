@@ -29,7 +29,7 @@ async function main () {
   const src = params['src']
   const title = params['title'] || 'CSV Viewer'
 
-  window.title = title
+  document.title = title
 
   const titleElement = document.createElement('h1')
   document.body.appendChild(titleElement)
