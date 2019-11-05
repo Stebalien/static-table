@@ -19,7 +19,17 @@ async function fetchCSV (url) {
       header: true,
       skipEmptyLines: true,
       error: (error, _) => { reject(error) },
-      complete: (result, _) => { resolve(result) }
+      complete: (result, _) => {
+        const trimmed = result.data.map((line) => {
+          const trimmedLine = {}
+          Object.entries(line).forEach(([key, value]) => {
+            trimmedLine[key.trim()] = value.trim()
+          })
+          return trimmedLine
+        })
+        result.data = trimmed
+        resolve(result)
+      }
     })
   })
 }
